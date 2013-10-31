@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Random;
 import java.util.HashMap;
@@ -6,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.Iterator;
+import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
@@ -17,9 +19,8 @@ import java.io.File;
 
 public class ScrabbleTwist
 {
-	public static void main( String[] args ) throws MalformedURLException, IOException
+	public static void main( String[] args )
 	{
-		getDictionary();
 		while ( true ) // Main game loop
 		{
 
@@ -72,14 +73,41 @@ public class ScrabbleTwist
 		{
 			input = kbReader.next();
 			System.out.println( "Found user input!" );
-			// TODO Check if user used letter
-			userInput = userInput.concat( " " + input );
-			input = "";
-			System.out.println( userInput );
+			boolean check = correctLetter( input );
+			if ( check )
+			{
+				userInput = userInput.concat( input );
+				input = "";
+				System.out.println( userInput );
+			}
+			else
+			{
+				System.out.println( "Use your letters dipshit!" );
+			}
 		}
 		kbReader.close();
 
 		return countScore( userInput );
+	}
+
+	public static boolean correctLetter( String word )
+	{
+		boolean correct = false;
+		ArrayList < Character > check = ( ArrayList < Character > ) lettersInPlay.clone();
+		for ( char ch : word.toCharArray() )
+		{
+			if ( check.contains( ch ) )
+			{
+				check.remove( ch );
+				correct = true;
+			}
+			else
+			{
+				System.out.println( "BOO" );
+				correct = false;
+			}
+		}
+		return correct;
 	}
 
 	public static int countScore( String userInput )
@@ -119,9 +147,10 @@ public class ScrabbleTwist
 		return false;
 	}
 
+	public static ArrayList < Character > lettersInPlay = new ArrayList < Character >();
+
 	public static ArrayList < Character > drawLetters()
 	{ // Function to draw letters. Returns list of the new hand.
-		ArrayList < Character > lettersInPlay = new ArrayList < Character >();
 
 		for ( int x = 0; x < 7; x++ ) // Picks letters from letterBag until 7 letters are drawn.
 		{
