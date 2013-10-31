@@ -92,7 +92,7 @@ public class ScrabbleTwist
 	public static boolean correctLetter( String word )
 	{
 		boolean correct = false;
-		ArrayList < Character > check = ( ArrayList < Character > ) lettersInPlay.clone();
+		ArrayList < Character > check = new ArrayList < Character >( lettersInPlay );
 		for ( char ch : word.toCharArray() )
 		{
 			if ( check.contains( ch ) )
