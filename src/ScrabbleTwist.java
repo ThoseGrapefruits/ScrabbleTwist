@@ -17,8 +17,9 @@ import java.io.File;
 
 public class ScrabbleTwist
 {
-	public static void main( String[] args )
+	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
+		getDictionary();
 		while ( true ) // Main game loop
 		{
 
@@ -71,8 +72,8 @@ public class ScrabbleTwist
 		{
 			input = kbReader.next();
 			System.out.println( "Found user input!" );
-				// Check if user used letter
-			userInput = userInput.concat( input );
+			// TODO Check if user used letter
+			userInput = userInput.concat( " " + input );
 			input = "";
 			System.out.println( userInput );
 		}
