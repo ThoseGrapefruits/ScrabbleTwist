@@ -67,15 +67,14 @@ public class ScrabbleTwist
 		Scanner kbReader = new Scanner( System.in );
 		String input;
 		System.out.println( "Your 30 seconds starts now:\n" );
-		for ( long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos( 5 ); stop > System.nanoTime(); )
+		for ( long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos( 30 ); stop > System.nanoTime(); )
 		{
-			if ( kbReader.hasNext() )
-			{
-				System.out.println( "Found user input!" );
-				input = kbReader.next();
-				userInput = userInput.concat( input );
-				System.out.println( userInput );
-			}
+			input = kbReader.next();
+			System.out.println( "Found user input!" );
+				// Check if user used letter
+			userInput = userInput.concat( input );
+			input = "";
+			System.out.println( userInput );
 		}
 		kbReader.close();
 
@@ -85,6 +84,8 @@ public class ScrabbleTwist
 	public static int countScore( String userInput )
 	{ // Counts the score based on the letter values, then returns it.
 		// TODO
+		int holder = 10;
+		return holder;
 	}
 
 	public static boolean findInDictionary( String word ) throws IOException
@@ -128,8 +129,8 @@ public class ScrabbleTwist
 			lettersInPlay.add( randomLetter );
 			Integer current = letterBag.get( randomLetter );
 			letterBag.put( randomLetter, current - 1 );
-			System.out.println( lettersInPlay );
 		}
+		System.out.println( lettersInPlay );
 		return lettersInPlay;
 	}
 
