@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Random;
 import java.util.HashMap;
@@ -18,8 +17,9 @@ import java.io.File;
 
 public class ScrabbleTwist
 {
-	public static void main( String[] args )
+	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
+		getDictionary();
 		while ( true ) // Main game loop
 		{
 
@@ -75,7 +75,7 @@ public class ScrabbleTwist
 			boolean check = correctLetter( input );
 			if ( check )
 			{
-				userInput = userInput.concat( input );
+				userInput = userInput.concat( input + " " );
 				input = "";
 				System.out.println( userInput );
 			}
