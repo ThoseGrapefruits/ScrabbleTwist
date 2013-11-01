@@ -19,13 +19,19 @@ public class ScrabbleTwist
 {
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
+		System.out.print( "Number of Players: " );
+		int playerCount = kbReader.nextInt();
+
 		getDictionary();
+
 		while ( true ) // Main game loop
 		{
-
-			drawLetters();
-			playerStatus();
-			inputSession();
+			for ( int currentPlayer = 1; currentPlayer <= playerCount; currentPlayer++ )
+			{
+				drawLetters();
+				playerStatus( currentPlayer );
+				inputSession();
+			}
 		}
 		// kbReader.close();
 	}
@@ -73,8 +79,7 @@ public class ScrabbleTwist
 			System.out.print( lettersInPlay + ": " );
 			input = kbReader.next();
 			System.out.println( "Found user input!" );
-			boolean check = correctLetter( input );
-			if ( check )
+			if ( correctLetter( input ) )
 			{
 				userInput = userInput.concat( input + " " );
 				input = "";
@@ -180,11 +185,12 @@ public class ScrabbleTwist
 	public static Random rand = new Random();
 	private static final Scanner kbReader = new Scanner( System.in );
 
-	public static void playerStatus()
+	public static void playerStatus( int currentPlayer )
 	{
 		while ( true )
 		{
-			System.out.println( "Player 1, are you ready? Press [ENTER] to continue. " );
+			System.out.println( "Player " + currentPlayer
+								+ ", are you ready? Press [ENTER] to continue. " );
 			String ready = kbReader.nextLine();
 			if ( ready.equals( "" ) )
 			{
