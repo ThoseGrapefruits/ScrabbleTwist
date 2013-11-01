@@ -70,6 +70,7 @@ public class ScrabbleTwist
 		System.out.println( "Your 30 seconds starts now:\n" );
 		for ( long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos( 30 ); stop > System.nanoTime(); )
 		{
+			System.out.print( lettersInPlay + ": " );
 			input = kbReader.next();
 			System.out.println( "Found user input!" );
 			boolean check = correctLetter( input );
