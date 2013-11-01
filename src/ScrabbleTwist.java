@@ -92,22 +92,16 @@ public class ScrabbleTwist
 
 	public static boolean correctLetter( String word )
 	{
-		boolean correct = false;
 		ArrayList < Character > check = new ArrayList < Character >( lettersInPlay );
 		for ( char ch : word.toCharArray() )
 		{
-			if ( check.contains( ch ) )
+			if ( !check.contains( ch ) )
 			{
-				check.remove( ch );
-				correct = true;
+				return false;
 			}
-			else
-			{
-				System.out.println( "BOO" );
-				correct = false;
-			}
+			check.remove( ch );
 		}
-		return correct;
+		return true;
 	}
 
 	public static int countScore( String userInput )
