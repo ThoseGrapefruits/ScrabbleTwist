@@ -95,13 +95,14 @@ public class ScrabbleTwist
 	 * Accept user input for 30 seconds, then calls the countScore function to determine the score the user got and returns that value.
 	 * 
 	 * VARIABLES
+	 * userInput -- Final string of words
 	 * input -- Words input directly from user, which are then scored immediately and feedback is given to the user.
 	 * stop -- Time, in nanoseconds, 30 seconds from when the for loop is reached.
 	 * kbReader -- Keyboard scanner for user input.
 	 */
 	public static int inputSession()
 	{ // TODO Change this so that it's actually counting scores and giving feedback to the user.
-		String userInput = "";
+		List < String > userInput = new ArrayList < String >();
 		Scanner kbReader = new Scanner( System.in );
 		String input;
 		System.out.println( "Your 30 seconds starts now:\n" );
@@ -112,7 +113,7 @@ public class ScrabbleTwist
 			System.out.println( "Found user input!" );
 			if ( correctLetter( input ) )
 			{
-				userInput = userInput.concat( input + " " );
+				userInput.add( input );
 
 				input = "";
 				System.out.println( userInput );
@@ -157,7 +158,7 @@ public class ScrabbleTwist
 	 * VARIABLES
 	 * score -- Current score of the given player.
 	 */
-	public static int countScore( String userInput )
+	public static int countScore( List < String > userInput )
 	{ // TODO Make score counter.
 		// TODO Put player scores in an array by the player number.
 		int score = 10;
