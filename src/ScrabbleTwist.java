@@ -17,6 +17,12 @@ import java.io.File;
 
 public class ScrabbleTwist
 {
+	/*
+	 * Asks player for number of players, fetches dictionary.txt (if necessary), starts main game loop.
+	 * 
+	 * VARIABLES
+	 * playerCount -- Number of players in the game, supplied by the user.
+	 */
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
 		System.out.print( "Number of Players: " );
@@ -36,15 +42,31 @@ public class ScrabbleTwist
 		// kbReader.close();
 	}
 
-	public static Path dictionaryPath = Paths.get( "dictionary.txt" ); // Path for "dictionary" (in same directory as program).
+	/*
+	 * Path for "dictionary" (in same directory as program).
+	 * (Where dictionary.txt will be saved if it isn't already there.)
+	 */
+	public static Path dictionaryPath = Paths.get( "dictionary.txt" );
 
+	/*
+	 * Checks if the dictionary has been saved locally at dictionary.txt in same directory as program.
+	 * If not, fetches it from Oracle. All the file fetching stuff came from StackOverflow.
+	 * 
+	 * VARIABLES
+	 * in & fout -- File streams for downloading and writing dictionary.
+	 * f -- File object for dictionary.txt
+	 * data[] -- Data size object for downloading dictionary.txt
+	 */
 	public static void getDictionary() throws MalformedURLException, IOException
-	{ // Checks if the dictionary has been saved locally already. If not, fetches it from Oracle.
-		BufferedInputStream in = null;
-		FileOutputStream fout = null;
+	{
 		File f = new File( "dictionary.txt" );
 		if ( !( f.isFile() ) || !f.canRead() )
 		{
+			BufferedInputStream in = null;
+			FileOutputStream fout = null;
+
+			System.out.print( "Downloading dictionary... " );
+
 			in = new BufferedInputStream(
 											new URL(
 														"http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt" ).openStream() );
@@ -64,24 +86,34 @@ public class ScrabbleTwist
 					in.close();
 				if ( fout != null )
 					fout.close();
+				System.out.println( "Done." );
 			}
 		}
 	}
 
+	/*
+	 * Accept user input for 30 seconds, then calls the countScore function to determine the score the user got and returns that value.
+	 * 
+	 * VARIABLES
+	 * input -- Words input directly from user, which are then scored immediately and feedback is given to the user.
+	 * stop -- Time, in nanoseconds, 30 seconds from when the for loop is reached.
+	 * kbReader -- Keyboard scanner for user input.
+	 */
 	public static int inputSession()
-	{ // Accept user input for 30 seconds, then calls the countScore function to determine the score the user got and returns that value.
+	{ // TODO Change this so that it's actually counting scores and giving feedback to the user.
 		String userInput = "";
 		Scanner kbReader = new Scanner( System.in );
 		String input;
 		System.out.println( "Your 30 seconds starts now:\n" );
 		for ( long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos( 30 ); stop > System.nanoTime(); )
-		{
+		{ // TODO Move away from for loop method, as it doesn't kill user input directly when time ends.
 			System.out.print( lettersInPlay + ": " );
 			input = kbReader.next();
 			System.out.println( "Found user input!" );
 			if ( correctLetter( input ) )
 			{
 				userInput = userInput.concat( input + " " );
+
 				input = "";
 				System.out.println( userInput );
 			}
@@ -95,6 +127,16 @@ public class ScrabbleTwist
 		return countScore( userInput );
 	}
 
+	/*
+	 * Checks if supplied word is made up of letters in the player's "hand", if so, returns true.
+	 * If there are any letters in the word that are not in the player's "hand", returns false.
+	 * Deletes letters as they are found to prevent user from using a letter more times than the number of
+	 * that letter that they have in their "hand". Turns word into a character array and iterates through it,
+	 * testing each letter against lettersInPlay.
+	 * 
+	 * VARIABLES
+	 * check -- Copy of lettersInPlay. Used to search for letters and delete them from list if found.
+	 */
 	public static boolean correctLetter( String word )
 	{
 		ArrayList < Character > check = new ArrayList < Character >( lettersInPlay );
@@ -109,13 +151,27 @@ public class ScrabbleTwist
 		return true;
 	}
 
+	/*
+	 * Counts the score based on the letter values, then returns the score as an integer.
+	 * 
+	 * VARIABLES
+	 * score -- Current score of the given player.
+	 */
 	public static int countScore( String userInput )
-	{ // Counts the score based on the letter values, then returns it.
-		// TODO
-		int holder = 10;
-		return holder;
+	{ // TODO Make score counter.
+		// TODO Put player scores in an array by the player number.
+		int score = 10;
+		return score;
 	}
 
+	/*
+	 * Checks dictionary from the word passed to the function. Returns either true or false
+	 * depending on if the word was found or not.
+	 * 
+	 * VARIABLES
+	 * dictionaryReader -- Scanner to read from the dictionary file.
+	 * currentLine -- The line the scanner is using in the dictionary file.
+	 */
 	public static boolean findInDictionary( String word ) throws IOException
 	{ // Checks our "dictionary", courtesy of Oracle, for the word given.
 		Scanner dictionaryReader;
@@ -146,27 +202,47 @@ public class ScrabbleTwist
 		return false;
 	}
 
+	/*
+	 * lettersInPlay is the "hand" of letters that the current player has.
+	 */
+	// TODO We should make a separate Player class, which can be instantiated, so we can have separate scores, lettersInPlay, etc. for each player.
 	public static ArrayList < Character > lettersInPlay = new ArrayList < Character >();
 
+	/*
+	 * Function to draw letters. Returns ArrayList of the new "hand" of letters.
+	 * Takes a random letter from the letterList, then reduces the count of that letter in the letterBag by 1.
+	 * 
+	 * VARIABLES
+	 * randomLetter -- A randomly selected letter from the letterList.
+	 */
 	public static ArrayList < Character > drawLetters()
-	{ // Function to draw letters. Returns list of the new hand.
-
+	{ // TODO It would be better to not build the letter list each time, but for now this is fine.
 		for ( int x = 0; x < 7; x++ ) // Picks letters from letterBag until 7 letters are drawn.
 		{
 			buildLetterList();
 			Character randomLetter = letterList.get( rand.nextInt( letterList.size() ) );
 			lettersInPlay.add( randomLetter );
-			Integer current = letterBag.get( randomLetter );
-			letterBag.put( randomLetter, current - 1 );
+			letterBag.put( randomLetter, letterBag.get( randomLetter ) - 1 );
 		}
 		System.out.println( lettersInPlay );
 		return lettersInPlay;
 	}
 
+	/*
+	 * List of letters which is generated by the buildLetterList() function.
+	 */
 	public static List < Character > letterList = new ArrayList < Character >();
 
+	/*
+	 * Turns our current dictionary status to a list to pull from with proper weighting on letters with more occurrences.
+	 * 
+	 * VARIABLES
+	 * keySetIterator -- Iterable variable from letterBag's keys.
+	 * key -- A single key of the letterBag hashmap.
+	 * amount -- Number of occurrences of the given letter.
+	 */
 	public static void buildLetterList()
-	{ // Turns our current dictionary status to a list to pull from with proper weighting on letters with more occurances.
+	{
 		Iterator < Character > keySetIterator = letterBag.keySet().iterator();
 		while ( keySetIterator.hasNext() )
 		{
@@ -182,7 +258,14 @@ public class ScrabbleTwist
 		}
 	}
 
+	/*
+	 * Random object, to be used by various functions for random number generation.
+	 */
 	public static Random rand = new Random();
+
+	/*
+	 * Global keyboard scanner used by multiple functions.
+	 */
 	private static final Scanner kbReader = new Scanner( System.in );
 
 	public static void playerStatus( int currentPlayer )
@@ -203,11 +286,12 @@ public class ScrabbleTwist
 		}
 	}
 
+	// HashMap with letters as keys and their number of occurrences as values.
 	public static Map < Character, Integer > letterBag = new HashMap < Character, Integer >()
 	{
 		private static final long serialVersionUID = -2876162972288839863L;
-		{ // This will be our "bag" of letters to pull from
-			put( 'A', 9 ); // I just put them directly in, I couldn't think of a better way of doing it.
+		{
+			put( 'A', 9 );
 			put( 'B', 2 );
 			put( 'C', 2 );
 			put( 'D', 4 );
@@ -236,10 +320,11 @@ public class ScrabbleTwist
 		}
 	};
 
+	// HashMap with letters as keys and their points as values.
 	public static Map < Character, Integer > letterPoints = new HashMap < Character, Integer >()
-	{ // This will be our "bag" of letters to pull from.
+	{
 		private static final long serialVersionUID = -2876162972288839863L;
-		{ // It contains each letter, as well as their current counts.
+		{
 			put( 'A', 1 );
 			put( 'B', 3 );
 			put( 'C', 3 );
