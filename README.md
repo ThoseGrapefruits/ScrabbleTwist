@@ -9,11 +9,11 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 
 #Report
 ##Goals
-### -Create method of interacting with letters and getting how many of them there are and how much they are worth.
+###### -Create method of interacting with letters and getting how many of them there are and how much they are worth.
 	- Method:
 		- Separate dictionaries for the count of the letters and the letter point values.
 	- Problems:
-###Select letters randomly and place them in a "hand" for the player
+######Select letters randomly and place them in a "hand" for the player
 	- Method:
 		- ArrayList for letters in hand.
 		- 
