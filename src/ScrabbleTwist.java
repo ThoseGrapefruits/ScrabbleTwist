@@ -155,10 +155,16 @@ public class ScrabbleTwist
 				System.out.println( "Contains letter(s) not in your hand." );
 				return false;
 			}
-			else if ( userInput.contains( word ) )
+			else
 			{
-				System.out.println( "Word already used." );
-				return false;
+				for ( String currentWord : userInput )
+				{
+					if ( currentWord.equalsIgnoreCase( word ) )
+					{
+						System.out.println( "Word already used." );
+						return false;
+					}
+				}
 			}
 			check.remove( ch );
 		}
@@ -196,7 +202,7 @@ public class ScrabbleTwist
 	 * currentLine -- The line the scanner is using in the dictionary file.
 	 */
 	public static boolean findInDictionary( String word ) throws IOException
-	{ // Checks our "dictionary", courtesy of Oracle, for the word given.
+	{
 		Scanner dictionaryReader;
 		try
 		{

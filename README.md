@@ -47,18 +47,33 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 ####getDictionary()
 _Prepares Oracle's dictionary for being used._
 1. Tests if the dictionary is already in the same directory as the program (from previous runs).
-2. If not, it downloads the dictionary. [(Source)](http://stackoverflow.com/a/921408)
+2. If not, it downloads the dictionary and writes it to dictionary.txt in the program's directory. [(Source)](http://stackoverflow.com/a/921408)
 	- Uses BufferedInputStream and FileOutputStream to download.
+_Input_ None
+_Output_ None
 
 ####inputSession()
 _Opens and manages user input session._
 1. Creates ArrayList for user input to continuously be added to.
 2. Continuous loop of user input and input testing for 30 seconds. [(Source)](http://stackoverflow.com/a/2550814)
-3. 
+_Input_ None
+_Output_ int
+
+####correctLetter()
+_Checks if inputted word used the letters available and hadn't been inputted before_
 
 ####countScore()
 _Takes userInput list and calculates the player's score._
 1. Iterates through words in userInput list, and then the individual characters of each word, and counts up the scores.
+_Input_ List < String >
+_Output_ int
+
+####findInDictionary()
+_Searches Oracle's dictionary for the word provided._
+1. Create dictionary scanner. If fails, then it fetches the dictionary from the web.
+2. Scans the file, looking for the given word, and returns true if found. Otherwise, returns false.
+_Input_ String
+_Output_ boolean
 
 
 ##Global Variables
