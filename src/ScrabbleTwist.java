@@ -25,8 +25,10 @@ public class ScrabbleTwist
 	 */
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
+		Scanner kbReader = new Scanner( System.in );
 		System.out.print( "Number of Players: " );
 		int playerCount = kbReader.nextInt();
+		kbReader.close();
 
 		getDictionary();
 
@@ -38,8 +40,13 @@ public class ScrabbleTwist
 				playerStatus( currentPlayer );
 				inputSession();
 			}
+			if ( letterBag.size() == 0 )
+			{
+				System.out.println( "Game over!\n" );
+				// TODO End-game stats, etc.
+				break;
+			}
 		}
-		// kbReader.close();
 	}
 
 	/*
@@ -111,7 +118,7 @@ public class ScrabbleTwist
 			System.out.print( lettersInPlay + ": " );
 			input = kbReader.next();
 			System.out.println( "Found user input!" );
-			if ( correctLetter( input ) )
+			if ( correctLetter( userInput, input ) )
 			{
 				userInput.add( input );
 
@@ -138,13 +145,19 @@ public class ScrabbleTwist
 	 * VARIABLES
 	 * check -- Copy of lettersInPlay. Used to search for letters and delete them from list if found.
 	 */
-	public static boolean correctLetter( String word )
+	public static boolean correctLetter( List < String > userInput, String word )
 	{
 		ArrayList < Character > check = new ArrayList < Character >( lettersInPlay );
 		for ( char ch : word.toCharArray() )
 		{
 			if ( !check.contains( ch ) )
 			{
+				System.out.println( "Contains letter(s) not in your hand." );
+				return false;
+			}
+			else if ( userInput.contains( word ) )
+			{
+				System.out.println( "Word already used." );
 				return false;
 			}
 			check.remove( ch );
@@ -157,11 +170,20 @@ public class ScrabbleTwist
 	 * 
 	 * VARIABLES
 	 * score -- Current score of the given player.
+	 * wordLength -- Length of the current word in the list, used for iteration.
 	 */
 	public static int countScore( List < String > userInput )
 	{ // TODO Make score counter.
 		// TODO Put player scores in an array by the player number.
-		int score = 10;
+		int score = 0;
+		for ( String word : userInput )
+		{
+			int wordLength = word.length();
+			for ( int i = 0; i < wordLength; i++ )
+			{
+				score += word.charAt( i );
+			}
+		}
 		return score;
 	}
 
@@ -264,13 +286,9 @@ public class ScrabbleTwist
 	 */
 	public static Random rand = new Random();
 
-	/*
-	 * Global keyboard scanner used by multiple functions.
-	 */
-	private static final Scanner kbReader = new Scanner( System.in );
-
 	public static void playerStatus( int currentPlayer )
 	{
+		Scanner kbReader = new Scanner( System.in );
 		while ( true )
 		{
 			System.out.println( "Player " + currentPlayer
@@ -285,6 +303,7 @@ public class ScrabbleTwist
 				continue;
 			}
 		}
+		kbReader.close();
 	}
 
 	// HashMap with letters as keys and their number of occurrences as values.
