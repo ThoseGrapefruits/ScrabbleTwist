@@ -7,8 +7,12 @@ Written in Java 7.
 
 Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt) for word checking.
 
+<br>
+
 #Report
+
 ##Goals
+
 ####Create method of interacting with letters and getting how many of them there are and how much they are worth.
 ######Method:
 - Separate dictionaries for the count of the letters and the letter point values.
