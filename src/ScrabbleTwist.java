@@ -17,11 +17,14 @@ import java.io.File;
 
 public class ScrabbleTwist
 {
-	/*
+	/**
 	 * Asks player for number of players, fetches dictionary.txt (if necessary), starts main game loop.
 	 * 
 	 * VARIABLES
 	 * playerCount -- Number of players in the game, supplied by the user.
+	 * 
+	 * @throws MalformedURLException if getDictionary() has an issue with the URL.
+	 * @throws IOException if inputSession() > countScore() cannot find dictionary.txt.
 	 */
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
@@ -49,18 +52,18 @@ public class ScrabbleTwist
 		}
 	}
 
-	/*
+	/**
 	 * Index of the current player.
 	 */
 	public static int currentPlayer;
 
-	/*
+	/**
 	 * Path for "dictionary" (in same directory as program).
 	 * (Where dictionary.txt will be saved if it isn't already there.)
 	 */
 	public static Path dictionaryPath = Paths.get( "dictionary.txt" );
 
-	/*
+	/**
 	 * Checks if the dictionary has been saved locally at dictionary.txt in same directory as program.
 	 * If not, fetches it from Oracle. All the file fetching stuff came from StackOverflow.
 	 * 
@@ -104,7 +107,7 @@ public class ScrabbleTwist
 		}
 	}
 
-	/*
+	/**
 	 * Accept user input for 30 seconds, then calls the countScore function to determine the score the user got and returns that value.
 	 * 
 	 * VARIABLES
@@ -112,6 +115,8 @@ public class ScrabbleTwist
 	 * input -- Words input directly from user, which are then scored immediately and feedback is given to the user.
 	 * stop -- Time, in nanoseconds, 30 seconds from when the for loop is reached.
 	 * kbReader -- Keyboard scanner for user input.
+	 * 
+	 * @return countScore()'s result after being given userInput ArrayList
 	 */
 	public static int inputSession()
 	{ // TODO Change this so that it's actually counting scores and giving feedback to the user.
@@ -142,7 +147,7 @@ public class ScrabbleTwist
 		return countScore( userInput );
 	}
 
-	/*
+	/**
 	 * Checks if supplied word is made up of letters in the player's "hand", if so, returns true.
 	 * If there are any letters in the word that are not in the player's "hand", returns false.
 	 * Deletes letters as they are found to prevent user from using a letter more times than the number of
@@ -151,6 +156,8 @@ public class ScrabbleTwist
 	 * 
 	 * VARIABLES
 	 * check -- Copy of lettersInPlay. Used to search for letters and delete them from list if found.
+	 * 
+	 * @return boolean, depending if word contains letters not in player's hand or if word has been used already.
 	 */
 	public static boolean correctLetter( List < String > userInput, String word )
 	{
@@ -172,16 +179,18 @@ public class ScrabbleTwist
 		return true;
 	}
 
-	/*
+	/**
 	 * Counts the score based on the letter values, then returns the score as an integer.
 	 * 
 	 * VARIABLES
 	 * score -- Current score of the given player.
 	 * wordLength -- Length of the current word in the list, used for iteration.
+	 * 
+	 * @return player's calculated score.
 	 */
 	public static int countScore( List < String > userInput )
 	{ // TODO Make score counter.
-		// TODO Put player scores in an array by the player number.
+		// TODO Put player scores in an ArrayList by the player number.
 		int score = 0;
 		for ( String word : userInput )
 		{
@@ -191,16 +200,19 @@ public class ScrabbleTwist
 				score += word.charAt( i );
 			}
 		}
+
 		return score;
 	}
 
-	/*
+	/**
 	 * Checks dictionary from the word passed to the function. Returns either true or false
 	 * depending on if the word was found or not.
 	 * 
 	 * VARIABLES
 	 * dictionaryReader -- Scanner to read from the dictionary file.
 	 * currentLine -- The line the scanner is using in the dictionary file.
+	 * 
+	 * @throws IOException if dictionary.txt does not exist.
 	 */
 	public static boolean findInDictionary( String word ) throws IOException
 	{
@@ -232,22 +244,23 @@ public class ScrabbleTwist
 		return false;
 	}
 
-	/*
+	/**
 	 * lettersInPlay is the "hand" of letters that the current player has.
 	 */
-	// TODO We should make a separate Player class, which can be instantiated, so we can have separate scores, lettersInPlay, etc. for each player.
 	public static ArrayList < Character > lettersInPlay = new ArrayList < Character >();
 
-	/*
+	/**
 	 * Function to draw letters. Returns ArrayList of the new "hand" of letters.
 	 * Takes a random letter from the letterList, then reduces the count of that letter in the letterBag by 1.
 	 * 
 	 * VARIABLES
 	 * randomLetter -- A randomly selected letter from the letterList.
+	 * 
+	 * @return ArrayList of letters randomly picked
 	 */
 	public static ArrayList < Character > drawLetters()
-	{ // TODO It would be better to not build the letter list each time, but for now this is fine.
-		for ( int x = 0; x < 7; x++ ) // Picks letters from letterBag until 7 letters are drawn.
+	{
+		for ( int x = 0; x < 7; x++ )
 		{
 			buildLetterList();
 			Character randomLetter = letterList.get( rand.nextInt( letterList.size() ) );
@@ -268,12 +281,12 @@ public class ScrabbleTwist
 		System.out.println( " ]" );
 	}
 
-	/*
+	/**
 	 * List of letters which is generated by the buildLetterList() function.
 	 */
 	public static List < Character > letterList = new ArrayList < Character >();
 
-	/*
+	/**
 	 * Turns our current dictionary status to a list to pull from with proper weighting on letters with more occurrences.
 	 * 
 	 * VARIABLES
@@ -298,7 +311,7 @@ public class ScrabbleTwist
 		}
 	}
 
-	/*
+	/**
 	 * Random object, to be used by various functions for random number generation.
 	 */
 	public static Random rand = new Random();
