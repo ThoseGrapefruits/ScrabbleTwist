@@ -19,7 +19,8 @@ public class ScrabbleTwist
 {
 
 	/**
-	 * Asks player for number of players, fetches dictionary.txt (if necessary), starts main game loop.
+	 * Asks user for number of players, calls getDictionary() to fetch dictionary.txt (if necessary),
+	 * starts main game loop.
 	 * 
 	 * VARIABLES
 	 * playerCount -- Number of players in the game, supplied by the user.
@@ -29,26 +30,43 @@ public class ScrabbleTwist
 	 */
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
-		System.out.print( "Number of Players: " );
-		int playerCount = kbReader.nextInt();
+		int playerCount = 5;
+		while ( playerCount > 4 )
+		{
+			System.out.print( "Number of Players: " );
+			playerCount = kbReader.nextInt();
+			if ( playerCount > 4 )
+			{
+				System.out.println( "Four or fewer players." );
+			}
+		}
 
 		getDictionary();
 
-		while ( true ) // Main game loop
+		while ( letterList.size() <= 7 ) // Main game loop
 		{
-			for ( currentPlayer = 0; currentPlayer <= playerCount; currentPlayer++ )
+			turnCount++;
+			for ( currentPlayer = 0; currentPlayer < playerCount; currentPlayer++ )
 			{
-				drawLetters();
 				playerStatus();
+				drawLetters();
 				inputSession();
 			}
-			if ( letterBag.size() == 0 )
-			{
-				System.out.println( "Game over!\n" );
-				// TODO End-game stats, etc.
-				break;
-			}
 		}
+
+		System.out.println( "Game over!\n\nSCORES:" );
+
+		for ( int n = 0; n < playerCount; n++ )
+		{
+			System.out.print( "Player " + ( n + 1 ) + "\t" );
+		}
+		System.out.println();
+		for ( int playerScore : scores )
+		{
+			System.out.print( playerScore + "\t\t" );
+		}
+
+		System.out.println( "\n\nThanks for playing!" );
 		kbReader.close();
 	}
 
@@ -61,6 +79,8 @@ public class ScrabbleTwist
 	 * Index of the current player.
 	 */
 	public static int currentPlayer;
+
+	public static int turnCount = 0;
 
 	/**
 	 * Path for "dictionary" (in same directory as program).
@@ -123,7 +143,7 @@ public class ScrabbleTwist
 	 * @return countScore()'s result after being given userInput ArrayList
 	 * @throws IOException if findInDictionary()'s dictionary doesn't exist at dictionary.txt
 	 */
-	public static int inputSession() throws IOException
+	public static void inputSession() throws IOException
 	{
 		List < String > userInput = new ArrayList < String >();
 		String input;
@@ -144,7 +164,10 @@ public class ScrabbleTwist
 			}
 		}
 
-		return countScore( userInput );
+		System.out.println( "Time's up!\n" );
+
+		System.out.println( "Player " + ( currentPlayer + 1 ) + "'s score: "
+				+ countScore( userInput ) );
 	}
 
 	/**
@@ -166,12 +189,12 @@ public class ScrabbleTwist
 		{
 			if ( !check.contains( ch ) )
 			{
-				System.out.println( " \"" + word + "\" contains letter(s) not in your hand." );
+				System.out.println( " \"" + word + "\" contains more " + ch + "'s than you have." );
 				return false;
 			}
 			else if ( userInput.contains( word ) )
 			{
-				System.out.println( "Word already used." );
+				System.out.println( word + " already used." );
 				return false;
 			}
 			check.remove( check.indexOf( ch ) );
@@ -186,11 +209,11 @@ public class ScrabbleTwist
 	 * score -- Current score of the given player.
 	 * wordLength -- Length of the current word in the list, used for iteration.
 	 * 
-	 * @return player's calculated score.
+	 * @return player's calculated score
+	 * @param userInput is list of all correct words inputted by the user
 	 */
 	public static int countScore( List < String > userInput )
-	{ // TODO Make score counter.
-		// TODO Put player scores in an ArrayList by the player number.
+	{
 		int score = 0;
 		for ( String word : userInput )
 		{
@@ -201,9 +224,14 @@ public class ScrabbleTwist
 				score += letterPoints.get( word.charAt( i ) );
 			}
 		}
-
+		scores.add( currentPlayer, score );
 		return score;
 	}
+
+	/**
+	 * Place to store player scores by index of the player number.
+	 */
+	public static ArrayList < Integer > scores = new ArrayList < Integer >();
 
 	/**
 	 * Checks dictionary from the word passed to the function. Returns either true or false
@@ -215,7 +243,8 @@ public class ScrabbleTwist
 	 * dictionaryReader -- Scanner to read from the dictionary file.
 	 * currentLine -- The line the scanner is using in the dictionary file.
 	 * 
-	 * @throws IOException if dictionary.txt does not exist.
+	 * @throws IOException if dictionary.txt does not exist
+	 * @param word is the user's last inputted word
 	 */
 	public static boolean findInDictionary( String word ) throws IOException
 	{
@@ -252,7 +281,7 @@ public class ScrabbleTwist
 	/**
 	 * lettersInPlay is the "hand" of letters that the current player has.
 	 */
-	public static ArrayList < Character > lettersInPlay = new ArrayList < Character >();
+	public static ArrayList < Character > lettersInPlay;
 
 	/**
 	 * Function to draw letters. Returns ArrayList of the new "hand" of letters.
@@ -265,6 +294,7 @@ public class ScrabbleTwist
 	 */
 	public static ArrayList < Character > drawLetters()
 	{
+		lettersInPlay = new ArrayList < Character >();
 		for ( int x = 0; x < 7; x++ )
 		{
 			buildLetterList();
@@ -304,6 +334,10 @@ public class ScrabbleTwist
 		if ( returnable )
 		{
 			returnString.concat( "]" );
+		}
+		if ( printIntro )
+		{
+			System.out.println();
 		}
 		return returnString;
 	}
