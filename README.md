@@ -16,6 +16,7 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 ######Problems:
 - 
 
+<br>
 
 #####Select letters randomly and place them in a "hand" for the player
 ###### Method:
@@ -25,13 +26,15 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 - Letters not properly biased by their number of occurences when drawing directly from dictionary.
 	- __Solution:__ Placed letters, in appropriate numbers, in a new list, which was then randomly picked from.
 
+<br>
 
 #####Accept user input of words and immediately check if they are made of the available letters.
 ######Method:
 
 ######Problems:
-- Stopping user input at exactly 30s (without giving them extra time for their last word) is seemingly impossible without a separate thread.
+- At first we thought we would have to stop the user exactly at 30s, which was much more of a challenge, but actually we didn't.
 
+<br>
 
 #####Get Oracle's dictionary in some usable form to check the inputted words against.
 ######Method:
@@ -41,7 +44,7 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 ######Problems:
 - 
 
-
+<br>
 
 ##Functions
 ####getDictionary()
