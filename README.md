@@ -14,11 +14,13 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 - Separate dictionaries for the count of the letters and the letter point values.
 
 ######Problems:
-- 
+- Assigning multiple values to the dictionary at declaration
+	- __Solution__ Create anonymous sub-class of each dictionary and add values individually inside of it. [(Source)](http://stackoverflow.com/a/1005083)
+	- As dirty as this sounds, it's [not terrible efficiency-wise and speed-wise](http://stackoverflow.com/q/924285), it just adds a lot of lines.
 
 <br>
 
-####Select letters randomly and place them in a "hand" for the player
+####Select letters randomly and place them in a "hand" for the player.
 ###### Method:
 - ArrayList for letters in hand.
 
