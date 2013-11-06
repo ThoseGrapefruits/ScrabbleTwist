@@ -17,6 +17,7 @@ import java.io.File;
 
 public class ScrabbleTwist
 {
+
 	/**
 	 * Asks player for number of players, fetches dictionary.txt (if necessary), starts main game loop.
 	 * 
@@ -28,10 +29,8 @@ public class ScrabbleTwist
 	 */
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
-		Scanner kbReader = new Scanner( System.in );
 		System.out.print( "Number of Players: " );
 		int playerCount = kbReader.nextInt();
-		kbReader.close();
 
 		getDictionary();
 
@@ -50,7 +49,13 @@ public class ScrabbleTwist
 				break;
 			}
 		}
+		kbReader.close();
 	}
+
+	/**
+	 * Global keyboard scanner, for use in various functions
+	 */
+	public static final Scanner kbReader = new Scanner( System.in );
 
 	/**
 	 * Index of the current player.
@@ -114,35 +119,30 @@ public class ScrabbleTwist
 	 * userInput -- Final string of words
 	 * input -- Words input directly from user, which are then scored immediately and feedback is given to the user.
 	 * stop -- Time, in nanoseconds, 30 seconds from when the for loop is reached.
-	 * kbReader -- Keyboard scanner for user input.
 	 * 
 	 * @return countScore()'s result after being given userInput ArrayList
+	 * @throws IOException if findInDictionary()'s dictionary doesn't exist at dictionary.txt
 	 */
-	public static int inputSession()
-	{ // TODO Change this so that it's actually counting scores and giving feedback to the user.
+	public static int inputSession() throws IOException
+	{
 		List < String > userInput = new ArrayList < String >();
-		Scanner kbReader = new Scanner( System.in );
 		String input;
 		System.out.println( "Your 30 seconds starts now:\n" );
 		for ( long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos( 30 ); stop > System
 				.nanoTime(); )
-		{ // TODO Move away from for loop method, as it doesn't kill user input directly when time ends.
-			System.out.print( lettersInPlay + ": " );
+		{
+			System.out.print( printLetters( false, true, lettersInPlay ) + ": " );
 			input = kbReader.next().toLowerCase();
-			System.out.println( "Found user input!" );
-			if ( correctLetter( userInput, input ) )
+			if ( correctLetter( userInput, input ) && findInDictionary( input ) )
 			{
 				userInput.add( input );
 
+				System.out.println( "✓ " + input );
+
 				input = "";
-				System.out.println( userInput );
-			}
-			else
-			{
-				System.out.println( "Use your letters dipshit!" );
+
 			}
 		}
-		kbReader.close();
 
 		return countScore( userInput );
 	}
@@ -162,11 +162,11 @@ public class ScrabbleTwist
 	public static boolean correctLetter( List < String > userInput, String word )
 	{
 		ArrayList < Character > check = new ArrayList < Character >( lettersInPlay );
-		for ( char ch : word.toCharArray() )
+		for ( char ch : word.toUpperCase().toCharArray() )
 		{
 			if ( !check.contains( ch ) )
 			{
-				System.out.println( "Contains letter(s) not in your hand." );
+				System.out.println( " \"" + word + "\" contains letter(s) not in your hand." );
 				return false;
 			}
 			else if ( userInput.contains( word ) )
@@ -174,7 +174,7 @@ public class ScrabbleTwist
 				System.out.println( "Word already used." );
 				return false;
 			}
-			check.remove( ch );
+			check.remove( check.indexOf( ch ) );
 		}
 		return true;
 	}
@@ -194,10 +194,11 @@ public class ScrabbleTwist
 		int score = 0;
 		for ( String word : userInput )
 		{
+			word = word.toUpperCase();
 			int wordLength = word.length();
 			for ( int i = 0; i < wordLength; i++ )
 			{
-				score += word.charAt( i );
+				score += letterPoints.get( word.charAt( i ) );
 			}
 		}
 
@@ -206,7 +207,9 @@ public class ScrabbleTwist
 
 	/**
 	 * Checks dictionary from the word passed to the function. Returns either true or false
-	 * depending on if the word was found or not.
+	 * depending on if the word was found or not. Catches IOException, meaning dictionary.txt
+	 * was not found, and calls getDictionary() function to download it. (This shouldn't ever
+	 * happen, because getDictionary is being called in main(), but it's a failsafe just in case.)
 	 * 
 	 * VARIABLES
 	 * dictionaryReader -- Scanner to read from the dictionary file.
@@ -223,20 +226,22 @@ public class ScrabbleTwist
 		}
 		catch ( IOException e )
 		{
-			System.out.print( "Dictionary not found, fetching from web... " );
 			getDictionary();
 			dictionaryReader = new Scanner( dictionaryPath );
-			System.out.println( "Done!" );
 		}
 		while ( dictionaryReader.hasNextLine() )
 		{
 			final String currentLine = dictionaryReader.nextLine();
-			if ( currentLine.contains( word ) )
-			{
 
-				System.out.println( word + " is a word." );
-				dictionaryReader.close();
-				return true;
+			char firstChar = word.charAt( 0 );
+
+			if ( currentLine.charAt( 0 ) == firstChar )
+			{
+				if ( currentLine.equals( word ) )
+				{
+					dictionaryReader.close();
+					return true;
+				}
 			}
 		}
 		System.out.println( word + " is not a word." );
@@ -267,18 +272,40 @@ public class ScrabbleTwist
 			lettersInPlay.add( randomLetter );
 			letterBag.put( randomLetter, letterBag.get( randomLetter ) - 1 );
 		}
-		printLetters( lettersInPlay );
+		printLetters( true, false, lettersInPlay );
 		return lettersInPlay;
 	}
 
-	public static void printLetters( ArrayList < Character > lettersInPlay )
+	/**
+	 * 
+	 * 
+	 * @param printIntro determines if "Player X's hand: " gets printed
+	 * @param returnable determines if string is built to be returned
+	 * @param lettersInPlay is the list of letters in the current player's hand
+	 */
+	public static String printLetters( boolean printIntro, boolean returnable,
+			ArrayList < Character > lettersInPlay )
 	{
-		System.out.print( "Player " + ( currentPlayer + 1 ) + "\'s Hand:\n[ " );
+		String returnString = "";
+		if ( printIntro )
+		{
+			System.out.println( "Player " + ( currentPlayer + 1 ) + "\'s Hand:" );
+		}
+		System.out.print( "[ " );
 		for ( Character letter : lettersInPlay )
 		{
 			System.out.print( letter + " " );
+			if ( returnable )
+			{
+				returnString.concat( letter + " " );
+			}
 		}
-		System.out.println( " ]" );
+		System.out.print( "]" );
+		if ( returnable )
+		{
+			returnString.concat( "]" );
+		}
+		return returnString;
 	}
 
 	/**
@@ -316,24 +343,20 @@ public class ScrabbleTwist
 	 */
 	public static Random rand = new Random();
 
-	public static void playerStatus()
+	/**
+	 * Asks player if they are ready, and waits for them to press RETURN
+	 * 
+	 * @throws IOException in case System.in.read() gets special.
+	 */
+	public static void playerStatus() throws IOException
 	{
-		Scanner kbReader = new Scanner( System.in );
 		while ( true )
 		{
 			System.out.println( "Player " + ( currentPlayer + 1 )
-					+ ", are you ready? Press [ENTER] to continue. " );
-			String ready = kbReader.nextLine();
-			if ( ready.equals( "" ) )
-			{
-				break;
-			}
-			else
-			{
-				continue;
-			}
+					+ ", are you ready? Press [RETURN] to continue. " );
+			System.in.read();
+			break;
 		}
-		kbReader.close();
 	}
 
 	// HashMap with letters as keys and their number of occurrences as values.
