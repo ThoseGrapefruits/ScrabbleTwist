@@ -41,8 +41,9 @@ public class ScrabbleTwist
 		}
 
 		getDictionary();
+		buildLetterList();
 
-		while ( letterList.size() <= 7 ) // Main game loop
+		while ( letterList.size() >= ( 7 * playerCount ) ) // Main game loop
 		{
 			turnCount++;
 			for ( currentPlayer = 0; currentPlayer < playerCount; currentPlayer++ )
@@ -176,8 +177,7 @@ public class ScrabbleTwist
 
 		System.out.println( "Time's up!\n" );
 
-		System.out.println( "Player " + ( currentPlayer + 1 ) + "'s score: "
-				+ countScore( userInput ) );
+		System.out.println( "Score: " + countScore( userInput ) );
 	}
 
 	/**
@@ -234,7 +234,14 @@ public class ScrabbleTwist
 				score += letterPoints.get( word.charAt( i ) );
 			}
 		}
-		scores.add( currentPlayer, score );
+		try
+		{
+			scores.add( currentPlayer, scores.get( currentPlayer ) + score );
+		}
+		catch ( IndexOutOfBoundsException e )
+		{
+			scores.add( currentPlayer, score );
+		}
 		return score;
 	}
 
