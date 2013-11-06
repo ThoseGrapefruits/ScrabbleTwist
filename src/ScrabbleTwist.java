@@ -273,7 +273,7 @@ public class ScrabbleTwist
 				}
 			}
 		}
-		System.out.println( word + " is not a word." );
+		System.out.println( word + " not found in dictionary." );
 		dictionaryReader.close();
 		return false;
 	}

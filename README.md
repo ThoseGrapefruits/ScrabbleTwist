@@ -42,7 +42,7 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 ####Get Oracle's dictionary in some usable form to check the inputted words against.
 ######Method:
 - Auto-download `dictionary.txt` file from Oracle.
-- Iterate through file with a scanner, checking each line if it is the same as the word given..
+- Iterate through file with a scanner, checking each line if it is the same as the word given.
 
 ######Problems:
 - 
@@ -59,6 +59,14 @@ _Prepares Oracle's dictionary for being used._
 
 _Input_ `None`  
 _Output_ `None`
+
+<br>
+
+####getDictionary()
+_Tests if dictionary has already been downloaded, and, if not, downloads it_
+
+1. Checks for dictionary @ `dictionary.txt` in the current directory.
+2. If not found, downloads it from [Oracle](http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt).
 
 <br>
 
