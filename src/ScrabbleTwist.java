@@ -116,7 +116,7 @@ public class ScrabbleTwist
 		for ( long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos( 30 ); stop > System.nanoTime(); )
 		{ // TODO Move away from for loop method, as it doesn't kill user input directly when time ends.
 			System.out.print( lettersInPlay + ": " );
-			input = kbReader.next();
+			input = kbReader.next().toLowerCase();
 			System.out.println( "Found user input!" );
 			if ( correctLetter( userInput, input ) )
 			{
@@ -155,16 +155,10 @@ public class ScrabbleTwist
 				System.out.println( "Contains letter(s) not in your hand." );
 				return false;
 			}
-			else
+			else if ( userInput.contains( word ) )
 			{
-				for ( String currentWord : userInput )
-				{
-					if ( currentWord.equalsIgnoreCase( word ) )
-					{
-						System.out.println( "Word already used." );
-						return false;
-					}
-				}
+				System.out.println( "Word already used." );
+				return false;
 			}
 			check.remove( ch );
 		}
