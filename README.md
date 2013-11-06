@@ -41,11 +41,12 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 
 ####Get Oracle's dictionary in some usable form to check the inputted words against.
 ######Method:
+- `getDictionary()`
 - Auto-download `dictionary.txt` file from Oracle.
 - Iterate through file with a scanner, checking each line if it is the same as the word given.
 
 ######Problems:
-- 
+- Download dictionary if it wasn't already saved locally. [(Source)](http://stackoverflow.com/a/921408)
 
 <br> <br>
 
@@ -53,20 +54,9 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 ####getDictionary()
 _Prepares Oracle's dictionary for being used._
 
-1. Tests if the dictionary is already in the same directory as the program (from previous runs).
-2. If not, it downloads the dictionary and writes it to `dictionary.txt` in the program's directory. [(Source)](http://stackoverflow.com/a/921408)
+1. Tests if the dictionary is already in the same directory as the program, saved as `dictionary.txt` (from previous runs).
+2. If not, it downloads the dictionary from [Oracle](http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt) and writes it to `dictionary.txt` in the program's directory. [(Source)](http://stackoverflow.com/a/921408)
 	- Uses `BufferedInputStream` and `FileOutputStream` to download.
-
-_Input_ `None`  
-_Output_ `None`
-
-<br>
-
-####getDictionary()
-_Tests if dictionary has already been downloaded, and, if not, downloads it_
-
-1. Checks for dictionary @ `dictionary.txt` in the current directory.
-2. If not found, downloads it from [Oracle](http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt).
 
 _Input_ `None`  
 _Output_ `None`
