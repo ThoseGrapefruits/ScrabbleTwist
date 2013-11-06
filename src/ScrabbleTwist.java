@@ -19,8 +19,8 @@ public class ScrabbleTwist
 {
 
 	/**
-	 * Asks user for number of players, calls getDictionary() to fetch dictionary.txt (if necessary),
-	 * starts main game loop.
+	 * Asks user for number of players, calls getDictionary() to fetch
+	 * dictionary.txt (if necessary), starts main game loop.
 	 * 
 	 * VARIABLES
 	 * playerCount -- Number of players in the game, supplied by the user.
@@ -30,8 +30,8 @@ public class ScrabbleTwist
 	 */
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
-		int playerCount = 5;
-		while ( playerCount > 4 )
+		int playerCount = 0;
+		while ( playerCount > 4 || playerCount < 1  )
 		{
 			System.out.print( "Number of Players: " );
 			playerCount = kbReader.nextInt();
@@ -89,8 +89,19 @@ public class ScrabbleTwist
 	public static Path dictionaryPath = Paths.get( "dictionary.txt" );
 
 	/**
-	 * Checks if the dictionary has been saved locally at dictionary.txt in same directory as program.
-	 * If not, fetches it from Oracle. All the file fetching stuff came from StackOverflow.
+	 * Place to store player scores by index of the player number.
+	 */
+	public static ArrayList < Integer > scores = new ArrayList < Integer >();
+
+	/**
+	 * lettersInPlay is the "hand" of letters that the current player has.
+	 */
+	public static ArrayList < Character > lettersInPlay;
+
+	/**
+	 * Checks if the dictionary has been saved locally at dictionary.txt in
+	 * same directory as program. If not, fetches it from Oracle. All the file
+	 * fetching stuff came from StackOverflow.
 	 * 
 	 * VARIABLES
 	 * in & fout -- File streams for downloading and writing dictionary.
@@ -229,11 +240,6 @@ public class ScrabbleTwist
 	}
 
 	/**
-	 * Place to store player scores by index of the player number.
-	 */
-	public static ArrayList < Integer > scores = new ArrayList < Integer >();
-
-	/**
 	 * Checks dictionary from the word passed to the function. Returns either true or false
 	 * depending on if the word was found or not. Catches IOException, meaning dictionary.txt
 	 * was not found, and calls getDictionary() function to download it. (This shouldn't ever
@@ -277,11 +283,6 @@ public class ScrabbleTwist
 		dictionaryReader.close();
 		return false;
 	}
-
-	/**
-	 * lettersInPlay is the "hand" of letters that the current player has.
-	 */
-	public static ArrayList < Character > lettersInPlay;
 
 	/**
 	 * Function to draw letters. Returns ArrayList of the new "hand" of letters.
@@ -384,13 +385,10 @@ public class ScrabbleTwist
 	 */
 	public static void playerStatus() throws IOException
 	{
-		while ( true )
-		{
-			System.out.println( "Player " + ( currentPlayer + 1 )
-					+ ", are you ready? Press [RETURN] to continue. " );
-			System.in.read();
-			break;
-		}
+		System.out.println( "Player " + ( currentPlayer + 1 )
+				+ ", are you ready? Press [RETURN] to continue. " );
+		System.in.read();
+		break;
 	}
 
 	// HashMap with letters as keys and their number of occurrences as values.

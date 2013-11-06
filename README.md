@@ -17,7 +17,7 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 - Assigning multiple values to the dictionary at declaration
 	- __Solution__ Create anonymous sub-class of each dictionary and add values individually inside of it. [(Source)](http://stackoverflow.com/a/1005083)
 	- As dirty as this sounds, it's [not terrible efficiency-wise and speed-wise](http://stackoverflow.com/q/924285), it just adds a lot of lines. Still, not the best, but not terrible
-	- It creates anonymous sub-classes which, at compile time, are what get put in `ScrabbleTwist$1.class` & `ScrabbleTwist$2.class`.
+	- It creates anonymous sub-classes which, at compile time, get put in `ScrabbleTwist$1.class` & `ScrabbleTwist$2.class`.
 
 <br>
 
@@ -68,16 +68,19 @@ _Tests if dictionary has already been downloaded, and, if not, downloads it_
 1. Checks for dictionary @ `dictionary.txt` in the current directory.
 2. If not found, downloads it from [Oracle](http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt).
 
+_Input_ `None`  
+_Output_ `None`
+
 <br>
 
 ####inputSession()
 _Opens and manages user input session._
 
 1. Creates `ArrayList` for user input to continuously be added to.
-2. Continuous loop of user input and input testing for 30 seconds. [(Source)](http://stackoverflow.com/a/2550814)  
+2. Continuous loop of user input and input testing for 30 seconds. [(Source)](http://stackoverflow.com/a/2550814)
 
 _Input_ `None`  
-_Output_ `int`
+_Output_ `None`
 
 <br>
 
@@ -109,3 +112,20 @@ _Output_ `boolean`
 <br><br>
 
 ##Global Variables
+####kbReader `Scanner`
+_Global keyboard scanner, used by all functions that require keyboard input._
+
+####currentPlayer `int`
+_Index of the current player (between 0 and 3)._
+
+####turnCount `int`
+_The current index of the number of cycles the game has run through._
+
+####dictionaryPath `Path`
+_Path to the `dictionary.txt` file, which is just `dictionary.txt` in the current directory._
+
+####scores `ArrayList < Integer >`
+_Place to store player scores by index of the player number._
+
+####lettersInPlay `ArrayList < Character >`
+_"Hand" of letters that the current player has to play with._
