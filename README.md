@@ -28,15 +28,17 @@ Uses [Oracle's dictionary](http://docs.oracle.com/javase/tutorial/collections/in
 ####Select letters randomly and place them in a "hand" for the player.
 ###### Method:
 - `ArrayList` for letters in hand.
+- `buildLetterList()`: Build new `ArrayList`, "`letterList`", each time a new letter has to be chosen, based off of the "`letterBag`" `HashMap`.
 
 ######Problems:
-- Letters not properly biased by their number of occurrences when drawing directly from dictionary.
-	- __Solution:__ Placed letters, in appropriate numbers, in a new list, which was then randomly picked from.
+- Letters not properly biased by their number of occurrences when drawing directly from dictionary, which we tried doing at first.
+	- __Solution:__ Placed letters, in appropriate numbers, in a new list (``), which was then randomly picked from.
 
 <br>
 
-####Accept user input of words and immediately check if they are made of the available letters.
+####Accept user input of words for 30 seconds and immediately check if they are made of the available letters, exist in the dictionary, and haven't already been used.
 ######Method:
+- Local variable `input`, for the current word being inputted, is run through `correctLetter()` & `findInDictionary()` functions.
 
 ######Problems:
 - At first we thought we would have to stop the user exactly at 30s, which was much more of a challenge, but actually we didn't.

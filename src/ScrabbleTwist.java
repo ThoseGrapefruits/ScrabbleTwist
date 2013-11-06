@@ -17,7 +17,6 @@ import java.io.File;
 
 public class ScrabbleTwist
 {
-
 	/**
 	 * Asks user for number of players, calls getDictionary() to fetch
 	 * dictionary.txt (if necessary), starts main game loop.
