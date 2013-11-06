@@ -34,10 +34,10 @@ public class ScrabbleTwist
 
 		while ( true ) // Main game loop
 		{
-			for ( int currentPlayer = 1; currentPlayer <= playerCount; currentPlayer++ )
+			for ( currentPlayer = 0; currentPlayer <= playerCount; currentPlayer++ )
 			{
 				drawLetters();
-				playerStatus( currentPlayer );
+				playerStatus();
 				inputSession();
 			}
 			if ( letterBag.size() == 0 )
@@ -48,6 +48,11 @@ public class ScrabbleTwist
 			}
 		}
 	}
+
+	/*
+	 * Index of the current player.
+	 */
+	public static int currentPlayer;
 
 	/*
 	 * Path for "dictionary" (in same directory as program).
@@ -75,8 +80,9 @@ public class ScrabbleTwist
 			System.out.print( "Downloading dictionary... " );
 
 			in = new BufferedInputStream(
-											new URL(
-														"http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt" ).openStream() );
+					new URL(
+							"http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt" )
+							.openStream() );
 			fout = new FileOutputStream( "dictionary.txt" );
 			try
 			{
@@ -113,7 +119,8 @@ public class ScrabbleTwist
 		Scanner kbReader = new Scanner( System.in );
 		String input;
 		System.out.println( "Your 30 seconds starts now:\n" );
-		for ( long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos( 30 ); stop > System.nanoTime(); )
+		for ( long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos( 30 ); stop > System
+				.nanoTime(); )
 		{ // TODO Move away from for loop method, as it doesn't kill user input directly when time ends.
 			System.out.print( lettersInPlay + ": " );
 			input = kbReader.next().toLowerCase();
@@ -247,8 +254,18 @@ public class ScrabbleTwist
 			lettersInPlay.add( randomLetter );
 			letterBag.put( randomLetter, letterBag.get( randomLetter ) - 1 );
 		}
-		System.out.println( lettersInPlay );
+		printLetters( lettersInPlay );
 		return lettersInPlay;
+	}
+
+	public static void printLetters( ArrayList < Character > lettersInPlay )
+	{
+		System.out.print( "Player " + ( currentPlayer + 1 ) + "\'s Hand:\n[ " );
+		for ( Character letter : lettersInPlay )
+		{
+			System.out.print( letter + " " );
+		}
+		System.out.println( " ]" );
 	}
 
 	/*
@@ -286,13 +303,13 @@ public class ScrabbleTwist
 	 */
 	public static Random rand = new Random();
 
-	public static void playerStatus( int currentPlayer )
+	public static void playerStatus()
 	{
 		Scanner kbReader = new Scanner( System.in );
 		while ( true )
 		{
-			System.out.println( "Player " + currentPlayer
-								+ ", are you ready? Press [ENTER] to continue. " );
+			System.out.println( "Player " + ( currentPlayer + 1 )
+					+ ", are you ready? Press [ENTER] to continue. " );
 			String ready = kbReader.nextLine();
 			if ( ready.equals( "" ) )
 			{
