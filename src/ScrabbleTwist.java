@@ -30,7 +30,7 @@ public class ScrabbleTwist
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
 		int playerCount = 0;
-		while ( playerCount > 4 || playerCount < 1  )
+		while ( playerCount > 4 || playerCount < 1 )
 		{
 			System.out.print( "Number of Players: " );
 			playerCount = kbReader.nextInt();
@@ -387,7 +387,6 @@ public class ScrabbleTwist
 		System.out.println( "Player " + ( currentPlayer + 1 )
 				+ ", are you ready? Press [RETURN] to continue. " );
 		System.in.read();
-		break;
 	}
 
 	// HashMap with letters as keys and their number of occurrences as values.
