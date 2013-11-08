@@ -94,18 +94,18 @@ _Input_ `List < String >`
 _Output_ `int`
 
 ###Function Hierarchy
-- main()
-	- getDictionary()
-	- buildLetterList()
-	- playerStatus()
-	- drawLetters()
-		- buildLetterList()
-		- printLetters()
-	- inputSession()
-		- correctLetter()
-		- findInDictionary()
-		- countScore()
-	- endGame()
+- `main()`
+	- `getDictionary()`
+	- `buildLetterList()`
+	- `playerStatus()`
+	- `drawLetters()`
+		- `buildLetterList()`
+		- `printLetters()`
+	- `inputSession()`
+		- `correctLetter()`
+		- `findInDictionary()`
+		- `countScore()`
+	- `endGame()`
 
 <br>
 
