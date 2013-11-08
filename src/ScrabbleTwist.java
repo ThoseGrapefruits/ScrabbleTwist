@@ -29,7 +29,6 @@ public class ScrabbleTwist
 	 */
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
-		int playerCount = 0;
 		while ( playerCount > 4 || playerCount < 1 )
 		{
 			System.out.print( "Number of Players: " );
@@ -53,21 +52,7 @@ public class ScrabbleTwist
 				inputSession();
 			}
 		}
-
-		System.out.println( "Game over!\n\nSCORES:" );
-
-		for ( int n = 0; n < playerCount; n++ )
-		{
-			System.out.print( "Player " + ( n + 1 ) + "\t" );
-		}
-		System.out.println();
-		for ( int playerScore : scores )
-		{
-			System.out.print( playerScore + "\t\t" );
-		}
-
-		System.out.println( "\n\nThanks for playing!" );
-		kbReader.close();
+		endGame();
 	}
 
 	/**
@@ -108,6 +93,82 @@ public class ScrabbleTwist
 	 * f -- File object for dictionary.txt
 	 * data[] -- Data size object for downloading dictionary.txt
 	 */
+
+	public static int playerCount;
+
+	/**
+	 * Prints out player scores, as well as the winner(s). Handles ties between players.
+	 */
+	public static void endGame()
+	{
+		ArrayList < Integer > winnerList = new ArrayList < Integer >();
+		int topScore = 0;
+
+		System.out.println( "Game over!\n\nSCORES:" );
+
+		for ( int n = 0; n < playerCount; n++ )
+		{
+			System.out.print( "Player " + ( n + 1 ) + "\t" );
+		}
+		System.out.println();
+
+		for ( int i = 0; i < scores.size(); i++ )
+		{
+			if ( playerCount > 1 )
+			{
+				if ( scores.get( i ) > topScore )
+				{
+					winnerList.clear();
+					winnerList.add( 0, i );
+					topScore = scores.get( i );
+				}
+				else if ( scores.get( i ) == topScore )
+				{
+					winnerList.add( i );
+				}
+			}
+			System.out.print( scores.get( i ) + "\t\t" );
+		}
+
+		System.out.println();
+
+		if ( winnerList.size() == 1 )
+		{
+			System.out.println( "\nPlayer " + ( winnerList.get( 0 ) + 1 ) + " won with a score of "
+					+ topScore + "." );
+		}
+		else
+		{
+			System.out.print( "\nPlayers " );
+			for ( int i = 0; i < winnerList.size(); i++ )
+			{
+				System.out.print( i + 1 );
+				if ( i < ( winnerList.size() - 1 ) )
+				{
+					if ( i == ( winnerList.size() - 2 ) )
+					{
+						if ( winnerList.size() == 2 )
+						{
+							System.out.print( " and " );
+						}
+						else
+						{
+							System.out.print( ", and " );
+						}
+					}
+					else
+					{
+						System.out.print( ", " );
+					}
+				}
+			}
+			System.out.println( " tied with a score of " + topScore + "." );
+		}
+
+		System.out.println( "\n\nThanks for playing!" );
+		kbReader.close();
+	}
+
 	public static void getDictionary() throws MalformedURLException, IOException
 	{
 		File f = new File( "dictionary.txt" );
@@ -177,7 +238,16 @@ public class ScrabbleTwist
 
 		System.out.println( "Time's up!\n" );
 
-		System.out.println( "Score: " + countScore( userInput ) );
+		System.out
+				.print( "Player " + ( currentPlayer + 1 ) + "\tScore: " + countScore( userInput ) );
+		if ( turnCount > 1 )
+		{
+			System.out.println( "\tTotal Score: " + scores.get( currentPlayer ) + "\n" );
+		}
+		else
+		{
+			System.out.println( "\n" );
+		}
 	}
 
 	/**
@@ -287,6 +357,7 @@ public class ScrabbleTwist
 		}
 		System.out.println( word + " not found in dictionary." );
 		dictionaryReader.close();
+		dictionaryReader.remove();
 		return false;
 	}
 
@@ -327,6 +398,10 @@ public class ScrabbleTwist
 		if ( printIntro )
 		{
 			System.out.println( "Player " + ( currentPlayer + 1 ) + "\'s Hand:" );
+		}
+		else
+		{
+			System.out.println();
 		}
 		System.out.print( "[ " );
 		for ( Character letter : lettersInPlay )

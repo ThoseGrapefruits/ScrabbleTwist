@@ -93,6 +93,19 @@ _Takes userInput list and calculates the player's score._
 _Input_ `List < String >`  
 _Output_ `int`
 
+###Function Hierarchy
+- main()
+	- getDictionary()
+	- buildLetterList()
+	- playerStatus()
+	- drawLetters()
+		- buildLetterList()
+		- printLetters()
+	- inputSession()
+		- correctLetter()
+		- findInDictionary()
+		- countScore()
+	- endGame()
 
 <br>
 
