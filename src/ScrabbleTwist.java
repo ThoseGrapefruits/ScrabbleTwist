@@ -12,8 +12,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 public class ScrabbleTwist
 {
@@ -25,7 +30,7 @@ public class ScrabbleTwist
 	 * playerCount -- Number of players in the game, supplied by the user.
 	 * 
 	 * @throws MalformedURLException if getDictionary() has an issue with the URL.
-	 * @throws IOException if inputSession() > countScore() cannot find dictionary.txt.
+	 * @throws IOException if countScore() in inputSession() cannot find dictionary.txt.
 	 */
 	public static void main( String[] args ) throws MalformedURLException, IOException
 	{
@@ -183,7 +188,7 @@ public class ScrabbleTwist
 					new URL(
 							"http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt" )
 							.openStream() );
-			fout = new FileOutputStream( "dictionary.txt" );
+			fout = new FileOutputStream( System.getProperty( "java.io.tmpdir" ) + "dictionary.txt" );
 			try
 			{
 				byte data[] = new byte[ 1024 ];
@@ -199,9 +204,37 @@ public class ScrabbleTwist
 					in.close();
 				if ( fout != null )
 					fout.close();
+				cleanDictionary();
 				System.out.println( "Done." );
 			}
 		}
+	}
+
+	/**
+	 * Cleans up the dictionary, deleting all words larger than 7 letters (to speed up search).
+	 * 
+	 * @throws IOException if either dictionary files can't be found.
+	 */
+	public static void cleanDictionary() throws IOException
+	{
+		File tempFile = new File( System.getProperty( "java.io.tmpdir" ) + "dictionary.txt" );
+		File outFile = new File( "dictionary.txt" );
+
+		BufferedReader reader = new BufferedReader( new FileReader( tempFile ) );
+		BufferedWriter writer = new BufferedWriter( new FileWriter( outFile ) );
+
+		String currentLine;
+
+		while ( ( currentLine = reader.readLine() ) != null )
+		{
+			// trim newline when comparing with lineToRemove
+			String trimmedLine = currentLine.trim();
+			if ( trimmedLine.length() > 7 )
+				continue;
+			writer.write( currentLine + "\n" );
+		}
+		reader.close();
+		writer.close();
 	}
 
 	/**
@@ -219,7 +252,7 @@ public class ScrabbleTwist
 	{
 		List < String > userInput = new ArrayList < String >();
 		String input;
-		System.out.println( "Your 30 seconds starts now:\n" );
+		System.out.println( "Your 30 seconds starts now:" );
 		for ( long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos( 30 ); stop > System
 				.nanoTime(); )
 		{
@@ -357,7 +390,6 @@ public class ScrabbleTwist
 		}
 		System.out.println( word + " not found in dictionary." );
 		dictionaryReader.close();
-		dictionaryReader.remove();
 		return false;
 	}
 
@@ -419,7 +451,7 @@ public class ScrabbleTwist
 		}
 		if ( printIntro )
 		{
-			System.out.println();
+			System.out.print( "\n\n" );
 		}
 		return returnString;
 	}
