@@ -188,7 +188,7 @@ public class ScrabbleTwist
 					new URL(
 							"http://docs.oracle.com/javase/tutorial/collections/interfaces/examples/dictionary.txt" )
 							.openStream() );
-			fout = new FileOutputStream( System.getProperty( "java.io.tmpdir" ) + "dictionary.txt" );
+			fout = new FileOutputStream( temporaryDirectory + "dictionary.txt" );
 			try
 			{
 				byte data[] = new byte[ 1024 ];
@@ -204,37 +204,91 @@ public class ScrabbleTwist
 					in.close();
 				if ( fout != null )
 					fout.close();
-				cleanDictionary();
+				cleanDictionary( false );
 				System.out.println( "Done." );
 			}
+		}
+		else
+		{
+			cleanDictionary( true );
 		}
 	}
 
 	/**
+	 * Temporary directory. I'm not sure how Java treats them, so I figured I would keep it consistent.
+	 */
+	private static String temporaryDirectory = System.getProperty( "java.io.tmpdir" );
+
+	/**
 	 * Cleans up the dictionary, deleting all words larger than 7 letters (to speed up search).
+	 * If dictionary.txt is already in directory,
 	 * 
 	 * @throws IOException if either dictionary files can't be found.
+	 * @param exists if dictionary.txt is already in place and needs to be processed.
 	 */
-	public static void cleanDictionary() throws IOException
+	public static void cleanDictionary( boolean exists ) throws IOException
 	{
-		File tempFile = new File( System.getProperty( "java.io.tmpdir" ) + "dictionary.txt" );
-		File outFile = new File( "dictionary.txt" );
+		File dictFile = new File( "dictionary.txt" );
+		if ( exists && !dictionaryIsClean() && dictFile.exists() && dictFile.canRead() )
+		{
+			BufferedReader reader = new BufferedReader( new FileReader( dictFile ) );
+			File tempFile = new File( temporaryDirectory + "dictionary.txt" );
+			BufferedWriter writer = new BufferedWriter( new FileWriter( tempFile ) );
 
-		BufferedReader reader = new BufferedReader( new FileReader( tempFile ) );
-		BufferedWriter writer = new BufferedWriter( new FileWriter( outFile ) );
+			processDictionary( reader, writer );
 
+			reader.close();
+			tempFile.renameTo( dictFile );
+			writer.close();
+		}
+		else if ( !exists )
+		{
+			File tempFile = new File( temporaryDirectory + "dictionary.txt" );
+			File outFile = new File( "dictionary.txt" );
+			BufferedReader reader = new BufferedReader( new FileReader( tempFile ) );
+			BufferedWriter writer = new BufferedWriter( new FileWriter( outFile ) );
+
+			processDictionary( reader, writer );
+		}
+	}
+
+	/**
+	 * Performs actual removal of words longer than 7 letters.
+	 * 
+	 * @param reader is the input file reader.
+	 * @param writer is the output file writer.
+	 * @throws IOException if the reader or writer can't read or write.
+	 */
+	public static void processDictionary( BufferedReader reader, BufferedWriter writer )
+			throws IOException
+	{
 		String currentLine;
-
 		while ( ( currentLine = reader.readLine() ) != null )
 		{
-			// trim newline when comparing with lineToRemove
+			// Trim currentLine when checking for line length.
 			String trimmedLine = currentLine.trim();
 			if ( trimmedLine.length() > 7 )
+			{
 				continue;
+			}
 			writer.write( currentLine + "\n" );
 		}
-		reader.close();
-		writer.close();
+	}
+
+	public static boolean dictionaryIsClean() throws FileNotFoundException, IOException
+	{
+		File dictFile = new File( "dictionary.txt" );
+		BufferedReader reader = new BufferedReader( new FileReader( dictFile ) );
+		String currentLine;
+		while ( ( currentLine = reader.readLine() ) != null )
+		{
+			String trimmedLine = currentLine.trim();
+			if ( trimmedLine.length() > 7 )
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

@@ -69,6 +69,28 @@ _Output_ `None`
 
 <br>
 
+####findInDictionary()
+_Searches Oracle's dictionary fo6r the word provided._
+
+1. Create dictionary scanner. If fails, then it fetches the dictionary from the web and saves it to a temporary file (which is processed by `cleanDictionary()` and subsequently moved to the program's directory).
+2. Scans the file, looking for the given word, and returns true if found. Otherwise, returns false.
+
+_Input_ `String`  
+_Output_ `boolean`
+
+<br>
+
+####cleanDictionary()
+_Eliminates words larger than 7 letters from saved dictionary._
+
+1. Reads dictionary from temporary file created by `getDictionary()`.
+2. Writes dictionary, line-by-line, in the program's directory, skipping lines with more than 7 letters.
+
+_Input_ `boolean`
+_Output_ `None`
+
+<br>
+
 ####inputSession()
 _Opens and manages user input session._
 
@@ -93,6 +115,8 @@ _Takes userInput list and calculates the player's score._
 _Input_ `List < String >`  
 _Output_ `int`
 
+<br>
+
 ###Function Hierarchy
 `main()`
 - `getDictionary()`
@@ -106,17 +130,6 @@ _Output_ `int`
 	- `findInDictionary()`
 	- `countScore()`
 - `endGame()`
-
-<br>
-
-####findInDictionary()
-_Searches Oracle's dictionary for the word provided._
-
-1. Create dictionary scanner. If fails, then it fetches the dictionary from the web.
-2. Scans the file, looking for the given word, and returns true if found. Otherwise, returns false.
-
-_Input_ `String`  
-_Output_ `boolean`
 
 <br><br>
 
