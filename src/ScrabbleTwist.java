@@ -38,11 +38,12 @@ public class ScrabbleTwist
 		{
 			System.out.print( "Number of Players: " );
 			playerCount = kbReader.nextInt();
-			if ( playerCount > 4 )
+			if ( playerCount > 4 || playerCount < 1 )
 			{
-				System.out.println( "Four or fewer players." );
+				System.out.println( "1-4 players." );
 			}
 		}
+		roundsLeft = letterList.size() / ( 7 * playerCount );
 
 		getDictionary();
 		buildLetterList();
@@ -56,9 +57,15 @@ public class ScrabbleTwist
 				drawLetters();
 				inputSession();
 			}
+			roundsLeft--;
 		}
 		endGame();
 	}
+
+	/**
+	 * Global remaining rounds.
+	 */
+	public static int roundsLeft;
 
 	/**
 	 * Global keyboard scanner, for use in various functions
@@ -285,9 +292,11 @@ public class ScrabbleTwist
 			String trimmedLine = currentLine.trim();
 			if ( trimmedLine.length() > 7 )
 			{
+				reader.close();
 				return false;
 			}
 		}
+		reader.close();
 		return true;
 	}
 
@@ -325,8 +334,9 @@ public class ScrabbleTwist
 
 		System.out.println( "Time's up!\n" );
 
-		System.out
-				.print( "Player " + ( currentPlayer + 1 ) + "\tScore: " + countScore( userInput ) );
+		System.out.println( "Player " + ( currentPlayer + 1 ) + "\tScore: "
+				+ countScore( userInput ) );
+		System.out.println( "Rounds remaining:" + roundsLeft );
 		if ( turnCount > 1 )
 		{
 			System.out.println( "\tTotal Score: " + scores.get( currentPlayer ) + "\n" );
